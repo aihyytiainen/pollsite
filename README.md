@@ -1,4 +1,13 @@
 # pollsite
+
+------------------------
+Update after 1st commit:
+I have some major difficulties with time management (pesky real life).
+The site has only a bare bones login page and the database has no entrys.
+But despite the pitiful state of the project I have confidence that I can do this.
+------------------------
+
+
 Site where users can make polls and participate on polls.
 
 The site enables users to create polls that other registered users can vote on.
