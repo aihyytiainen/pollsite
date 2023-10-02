@@ -12,17 +12,56 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+	return render_template("index.html")
 
-@app.route("/login",methods=["POST"])
+@app.route("/sign_up")
+def sign_up():
+	return render_template("sign_up.html")
+
+@app.route("/new_user", methods=["POST"])
+def new_user():
+	username = request.form["username"]
+	password = request.form["password"]
+	groupA = False
+	groupB = False
+	groupC = False
+	groupD = False
+	if username and password:
+		hash_value = generate_password_hash(password)
+		sql = "INSERT INTO users (username, password, groupA, groupB, groupC, groupD) VALUES (:username, :password, :groupA, :groupB, :groupC, :groupD)"
+		db.session.execute(text(sql), {"username":username, "password":hash_value, "groupA":groupA, "groupB":groupB, "groupC":groupC, "groupD":groupD})
+		db.session.commit()
+		session["username"] = username
+		return redirect("/")
+	return redirect("/sign_up")
+
+@app.route("/login")
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
-    # TODO: check username and password
-    session["username"] = username
-    return redirect("/")
+	return render_template("login.html")
+
+@app.route("/loginuser",methods=["POST"])
+def login_user():
+	username = request.form["username"]
+	password = request.form["password"]
+	sql = text("SELECT id, password FROM users WHERE username=:username")
+	result = db.session.execute(sql, {"username":username})
+	user = result.fetchone()
+	if not user:
+		return render_template("login_fail.html")
+	else:
+		hash_value = user.password
+		if check_password_hash(hash_value, password):
+			session["username"] = username
+			return redirect("/")
+		else:
+			return render_template("login_fail.html")
+
+#@app.route("/loign_fail")
+#def login_fail():
+#	render_template("login_fail.html")
+
 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    return redirect("/")
+	del session["username"]
+	return redirect("/")
