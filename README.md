@@ -13,7 +13,7 @@ Installation (linux):
 
 	(in my case <*> is postgresql://hyxhyx and <**> is a random key I genereated)
 
--activate virtual environment and install dependencies wiith these commands in project folder:
+-activate virtual environment and install dependencies with these commands in project folder:
 
  	$ python3 -m venv venv
 	$ source venv/bin/activate
