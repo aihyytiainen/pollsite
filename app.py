@@ -32,10 +32,6 @@ def new_user():
 	groupD = False
 	if len(username) > 11 or len(password) < 4 or  len(password) > 12:
 		return render_template("sign_up_fail.html")
-	#if len(password) < 4:
-	#	return render_template("sign_up_fail.html")
-	#if len(password) > 12:
-	#	return render_template("sign_up_fail.html")
 	if db.session.execute(text("SELECT FROM users WHERE username=:username"), {"username":username}).fetchone() is not None :
 		return render_template("sign_up_fail.html")
 	if username and password:
@@ -67,7 +63,6 @@ def login_user():
 			return redirect("/")
 		else:
 			return render_template("login_fail.html")
-
 
 @app.route("/logout")
 def logout():
@@ -105,10 +100,12 @@ def poll(id):
 @app.route("/answer", methods=["POST"])
 def answer():
 	poll_id = request.form["id"]
-	if "answer" in request.form:
-		choice_id = request.form["answer"]
-		sql = "INSERT INTO answers (choice_id, sent_at) VALUES (:choice_id, NOW())"
-		db.session.execute(text(sql), {"choice_id":choice_id})
+	answers = request.form.getlist("answer")
+	for answer in answers:
+		if "answer" in request.form:
+			choice_id = request.form["answer"]
+			sql = "INSERT INTO answers (choice_id, sent_at) VALUES (:choice_id, NOW())"
+			db.session.execute(text(sql), {"choice_id":choice_id})
 		db.session.commit()
 	return redirect("/result/" + str(poll_id))
 
@@ -122,3 +119,4 @@ def result(id):
 	result = db.session.execute(text(sql), {"poll_id":id})
 	choices = result.fetchall()
 	return render_template("result.html", topic=topic, choices=choices)
+
