@@ -2,7 +2,13 @@
 <p>You're logged in as {{ session.username }}</p>
 <form action="/logout">
   <button type="submit">Log out</button>
-</from>
+</form>
+<form action="/new">
+  <button type="submit">Create a poll</button>
+</form>
+<form action="/manage">
+  <button type="submit">Manage your polls</button>
+</form>
 {% else %}
 
 <form action="/login">
