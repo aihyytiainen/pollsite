@@ -11,6 +11,7 @@ CREATE TABLE polls (
 	topic TEXT,
 	created_at TIMESTAMP,
 	created_by TEXT
+	visible BOOLEAN
 );
 
 CREATE TABLE choices (
