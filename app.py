@@ -95,6 +95,11 @@ def create():
 
 @app.route("/poll/<int:id>")
 def poll(id):
+	username = session["username"]
+	voted = "SELECT * FROM votedpolls WHERE id=:id AND username=:username"
+	voted_result = db.session.execute(text(voted), {"id":id, "username":username})
+	if voted_result.fetchone() != None:
+		return redirect("/")
 	sql = "SELECT topic FROM polls WHERE id=:id"
 	result = db.session.execute(text(sql), {"id":id})
 	topic = result.fetchone()[0]
@@ -115,6 +120,10 @@ def answer():
 		if session["csrf_token"] != request.form["csrf_token"]:
 			abort(403)
 		db.session.commit()
+	username = session["username"]
+	sql = "INSERT INTO votedpolls (id, username) VALUES (:id, :username)"
+	db.session.execute(text(sql), {"id":poll_id, "username":username})
+	db.session.commit()
 	return redirect("/result/" + str(poll_id))
 
 @app.route("/result/<int:id>")

@@ -25,3 +25,8 @@ CREATE TABLE answers (
 	choice_id INTEGER REFERENCES choices,
 	sent_at TIMESTAMP
 );
+
+CREATE TABLE votedpolls (
+	id SERIAL PRIMARY KEY,
+	username TEXT
+);

@@ -44,29 +44,31 @@ Installation (linux):
 
 Completed:
 
--sign up
+- sign up
 
--login
+- login
 
--creation of simple one choice polls with limited choices
+- creation of simple one choice polls with limited choices
 
--database schema for users, polls, choices and answers
+- database schema for users, polls, choices and answers
 
--csrf on creation of polls and voting
+- csrf on creation of polls and voting
 
 - management (deletion/hiding) of own polls
 
+- limited votes to one per user in a poll
+
 TODO:
 
--user groups (A-D in database but not yet used)
+- user groups (A-D in database but not yet used)
 
--multiple choice variant of polls
+- multiple choice variant of polls
 
--addition of new choices by voters
+- addition of new choices by voters
 
--time sentisitive polls
+- time sentisitive polls
 
--admin features
+- admin features
 
 
 ----------
