@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from os import getenv
 from werkzeug.security import check_password_hash, generate_password_hash
+import secrets
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
@@ -40,6 +41,7 @@ def new_user():
 		db.session.execute(text(sql), {"username":username, "password":hash_value, "groupA":groupA, "groupB":groupB, "groupC":groupC, "groupD":groupD})
 		db.session.commit()
 		session["username"] = username
+		session["csrf_token"] = secrets.token_hex(16)
 		return redirect("/")
 	return redirect("/sign_up")
 
@@ -60,6 +62,7 @@ def login_user():
 		hash_value = user.password
 		if check_password_hash(hash_value, password):
 			session["username"] = username
+			session["csrf_token"] = secrets.token_hex(16)
 			return redirect("/")
 		else:
 			return render_template("login_fail.html")
@@ -85,6 +88,8 @@ def create():
 		if choice != "":
 			sql = "INSERT INTO choices (poll_id, choice) VALUES (:poll_id, :choice)"
 			db.session.execute(text(sql), {"poll_id":poll_id, "choice":choice})
+	if session["csrf_token"] != request.form["csrf_token"]:
+		abort(403)
 	db.session.commit()
 	return redirect("/")
 
@@ -107,6 +112,8 @@ def answer():
 			choice_id = request.form["answer"]
 			sql = "INSERT INTO answers (choice_id, sent_at) VALUES (:choice_id, NOW())"
 			db.session.execute(text(sql), {"choice_id":choice_id})
+		if session["csrf_token"] != request.form["csrf_token"]:
+			abort(403)
 		db.session.commit()
 	return redirect("/result/" + str(poll_id))
 
