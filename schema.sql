@@ -1,10 +1,12 @@
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
-	username TEXT, password TEXT,
-	 groupA BOOLEAN,
-	 groupB BOOLEAN,
-	 groupC BOOLEAN,
-	 groupD BOOLEAN
+	username TEXT,
+	password TEXT,
+	groupA BOOLEAN,
+	groupB BOOLEAN,
+	groupC BOOLEAN,
+	groupD BOOLEAN,
+	admin BOOLEAN
 );
 CREATE TABLE polls (
 	id SERIAL PRIMARY KEY,

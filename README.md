@@ -40,6 +40,12 @@ Installation (linux):
  	$ flask run
 		(flask will propt a local address where the site is running)
 
+-make an admin user:
+
+	after you have signed up you can make a user admin with psql:
+		$pslq
+		database=# UPDATE users WHERE username=<created user> SET admin=TRUE;
+
 ----------
 
 Completed:
@@ -58,6 +64,8 @@ Completed:
 
 - limited votes to one per user in a poll
 
+- admin user can manage all polls
+
 TODO:
 
 - user groups (A-D in database but not yet used)
@@ -67,8 +75,6 @@ TODO:
 - addition of new choices by voters
 
 - time sentisitive polls
-
-- admin features
 
 
 ----------

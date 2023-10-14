@@ -31,14 +31,15 @@ def new_user():
 	groupB = False
 	groupC = False
 	groupD = False
+	admin = False
 	if len(username) > 11 or len(password) < 4 or  len(password) > 12:
 		return render_template("sign_up_fail.html")
 	if db.session.execute(text("SELECT FROM users WHERE username=:username"), {"username":username}).fetchone() is not None :
 		return render_template("sign_up_fail.html")
 	if username and password:
 		hash_value = generate_password_hash(password)
-		sql = "INSERT INTO users (username, password, groupA, groupB, groupC, groupD) VALUES (:username, :password, :groupA, :groupB, :groupC, :groupD)"
-		db.session.execute(text(sql), {"username":username, "password":hash_value, "groupA":groupA, "groupB":groupB, "groupC":groupC, "groupD":groupD})
+		sql = "INSERT INTO users (username, password, groupA, groupB, groupC, groupD, admin) VALUES (:username, :password, :groupA, :groupB, :groupC, :groupD, :admin)"
+		db.session.execute(text(sql), {"username":username, "password":hash_value, "groupA":groupA, "groupB":groupB, "groupC":groupC, "groupD":groupD, "admin":admin})
 		db.session.commit()
 		session["username"] = username
 		session["csrf_token"] = secrets.token_hex(16)
@@ -140,8 +141,12 @@ def result(id):
 @app.route("/manage")
 def manage():
 	username = session["username"]
-	sql = "SELECT id, topic, created_at FROM polls WHERE created_by=:username AND visible=TRUE ORDER BY id DESC"
-	result = db.session.execute(text(sql), {"username":username})
+	if db.session.execute(text("SELECT admin FROM users WHERE username=:username"), {"username":username}).fetchone()[0] == True:
+		sql = "SELECT id, topic, created_at FROM polls WHERE visible=TRUE ORDER BY id DESC"
+		result = db.session.execute(text(sql))
+	else:
+		sql = "SELECT id, topic, created_at FROM polls WHERE created_by=:username AND visible=TRUE ORDER BY id DESC"
+		result = db.session.execute(text(sql), {"username":username})
 	polls = result.fetchall()
 	return render_template("manage.html", polls=polls)
 
