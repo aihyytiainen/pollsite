@@ -52,11 +52,13 @@ Completed:
 
 -database schema for users, polls, choices and answers
 
+-csrf on creation of polls and voting
+
+- management (deletion/hiding) of own polls
+
 TODO:
 
 -user groups (A-D in database but not yet used)
-
--management (deletion/hiding) of polls
 
 -multiple choice variant of polls
 
