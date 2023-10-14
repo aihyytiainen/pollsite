@@ -9,7 +9,8 @@ CREATE TABLE users (
 CREATE TABLE polls (
 	id SERIAL PRIMARY KEY,
 	topic TEXT,
-	created_at TIMESTAMP
+	created_at TIMESTAMP,
+	created_by TEXT
 );
 
 CREATE TABLE choices (

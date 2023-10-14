@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
-	sql = "SELECT id, topic, created_at FROM polls ORDER BY id DESC"
+	sql = "SELECT id, topic, created_at FROM polls WHERE visible=TRUE ORDER BY id DESC"
 	result = db.session.execute(text(sql))
 	polls = result.fetchall()
 	return render_template("index.html", polls=polls)
@@ -76,8 +76,9 @@ def new():
 @app.route("/create", methods=["POST"])
 def create():
 	topic = request.form["topic"]
-	sql = "INSERT INTO polls (topic, created_at) VALUES (:topic, NOW()) RETURNING id"
-	result = db.session.execute(text(sql), {"topic":topic})
+	username = session["username"]
+	sql = "INSERT INTO polls (topic, created_at, created_by, visible) VALUES (:topic, NOW(), :username, TRUE) RETURNING id"
+	result = db.session.execute(text(sql), {"topic":topic, "username":username})
 	poll_id = result.fetchone()[0]
 	choices = request.form.getlist("choice")
 	for choice in choices:
@@ -120,3 +121,17 @@ def result(id):
 	choices = result.fetchall()
 	return render_template("result.html", topic=topic, choices=choices)
 
+@app.route("/manage")
+def manage():
+	username = session["username"]
+	sql = "SELECT id, topic, created_at FROM polls WHERE created_by=:username AND visible=TRUE ORDER BY id DESC"
+	result = db.session.execute(text(sql), {"username":username})
+	polls = result.fetchall()
+	return render_template("manage.html", polls=polls)
+
+@app.route("/delete/<int:id>")
+def delete(id):
+	sql = "UPDATE polls SET visible=FALSE WHERE id=:id"
+	db.session.execute(text(sql), {"id":id})
+	db.session.commit()
+	return redirect("/manage")
