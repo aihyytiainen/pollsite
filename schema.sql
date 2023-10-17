@@ -30,5 +30,6 @@ CREATE TABLE answers (
 
 CREATE TABLE votedpolls (
 	id SERIAL PRIMARY KEY,
-	username TEXT
+	poll_id INTEGER REFERENCES polls,
+	username TEXT REFERENCES users
 );

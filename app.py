@@ -97,7 +97,7 @@ def create():
 @app.route("/poll/<int:id>")
 def poll(id):
 	username = session["username"]
-	voted = "SELECT * FROM votedpolls WHERE id=:id AND username=:username"
+	voted = "SELECT * FROM votedpolls WHERE poll_id=:id AND username=:username"
 	voted_result = db.session.execute(text(voted), {"id":id, "username":username})
 	if voted_result.fetchone() != None:
 		return redirect("/")
@@ -122,8 +122,8 @@ def answer():
 			abort(403)
 		db.session.commit()
 	username = session["username"]
-	sql = "INSERT INTO votedpolls (id, username) VALUES (:id, :username)"
-	db.session.execute(text(sql), {"id":poll_id, "username":username})
+	sql = "INSERT INTO votedpolls (poll_id, username) VALUES (:poll_id, :username)"
+	db.session.execute(text(sql), {"poll_id":poll_id, "username":username})
 	db.session.commit()
 	return redirect("/result/" + str(poll_id))
 
