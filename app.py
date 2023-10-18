@@ -1,5 +1,5 @@
-from flask import Flask
-from flask import redirect, render_template, request, session
+#from flask import Flask
+from flask import redirect, render_template, request, session, Flask, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from os import getenv
@@ -100,6 +100,7 @@ def poll(id):
 	voted = "SELECT * FROM votedpolls WHERE poll_id=:id AND username=:username"
 	voted_result = db.session.execute(text(voted), {"id":id, "username":username})
 	if voted_result.fetchone() != None:
+		flash("Only one vote per user in a poll!")
 		return redirect("/")
 	sql = "SELECT topic FROM polls WHERE id=:id"
 	result = db.session.execute(text(sql), {"id":id})
