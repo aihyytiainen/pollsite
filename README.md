@@ -66,7 +66,7 @@ Completed:
 
 - admin user can manage all polls
 
-TODO:
+Left on the drawing board:
 
 - user groups (A-D in database but not yet used)
 
